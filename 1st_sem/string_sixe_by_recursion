@@ -1,0 +1,19 @@
+int rec(char*);
+
+int main() {
+    char str[256];
+    
+    gets_s(str);
+    int size;
+    size = rec(str);
+    cout << size;
+}
+
+int rec(char *str) {
+    
+    if (*str == '\0') {
+        return 0;
+    }
+    else
+        return 1 + rec(str + 1);
+} //рекурсивное вычилсение длины строки.
