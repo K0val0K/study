@@ -1,0 +1,56 @@
+#include <iostream>
+#include <string>
+using namespace std;
+bool isCorrectAdress(string);
+int main() {
+	string adress;
+	getline(cin, adress);
+	(isCorrectAdress(adress)) ? cout << "YES" :cout <<  "NO";
+
+	return 0;
+}
+bool isCorrectAdress(string adress) {
+	int position_start = 0, position_end, number1 = -1,number2 = -1,number3 = -1,number4 = -1;
+	bool correct = true;
+	int n = adress.size();
+	if (n < 7) return false;
+	int point_counter = 0;
+	for (int i = 0; i < n; i++) {
+		if (adress[i] == '.') {
+			point_counter++;
+		}
+		if (adress[i] == '.' && adress[i + 1] == '.') {
+			return false;
+			break;
+		}
+	}
+		if (point_counter != 3) return false;
+		for (int i = 0; i < n; i++)
+		{
+			if (adress[i] >= '0' && adress[i] <= '9' || adress[i] == '.')
+			{
+				continue;
+			}
+			else return false;
+		}
+
+
+
+	
+	for (int i = 0; i < n; i++) {
+
+	}
+	position_end = adress.find_first_of('.');
+	number1 = stoi(adress.substr(0, position_end));
+	position_start = position_end;
+	position_end = adress.find_first_of('.', position_start + 1);
+	number2 = stoi(adress.substr(position_start + 1, position_end));
+	position_start = position_end;
+	position_end = adress.find_first_of('.', position_start + 1);
+	number3 = stoi(adress.substr(position_start + 1, position_end));
+	position_start = position_end;
+	position_end = adress.find_first_of('\0', position_start + 1);
+	number4 = stoi(adress.substr(position_start  + 1, position_end));
+	return(number1 <= 255 && number1 >= 0 && number2 <= 255 && number2 >= 0 && number3 <= 255 && number3 >= 0 && number4 <= 255 && number4 >= 0) ? true : false;
+	
+}
