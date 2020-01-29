@@ -1,0 +1,85 @@
+
+#include <iostream>
+#include <math.h>
+#include <iomanip>
+using namespace std;
+const double pi = 4. * atan(1.);
+typedef double (*ufy)(double, double, int&);
+typedef double (*ufs)(double, double, int&, double);
+void table_y(double, double, double, double, ufy);
+void table_s(double, double, double, double, ufs, ufy);
+double y(double, double, int&);
+double s(double, double, int&, double);
+int main()
+{
+	double a, b, eps, h;
+	cout << "Enter low bound a: ";
+	cin >> a;
+	cout << "Enter high bound b: ";
+	cin >> b;
+	cout << "Enter step h: ";
+	cin >> h;
+	cout << "Enter error eps: ";
+	cin >> eps;
+	cout << setw(8) << "x" << setw(15) << "y(x)" << setw(10) << "k" << endl;
+	table_y(a, b, h, eps, y);
+	cout << setw(8) << "x" << setw(15) << "s(x)" << setw(10) << "k" << endl;
+	table_s(a, b, h, eps, s, y);
+
+
+	/*cout << setw(8) << "x" << setw(15) << "y(x)" << setw(10) << "k" << endl;
+	tabl(-0.5, 0.5, 0.1, 200000, y);
+	cout << endl;
+	cout << setw(8) << "x" << setw(15) << "s(x)" << setw(10) << "k" << endl;
+	tabl(-0.5, 0.5, 0.1, 200000, s);*/
+	return 0;
+}
+void table_y(double a, double b, double h, double eps, ufy fun)
+{
+
+	int k = 1;
+	double sum;
+	for (double x = a; x < b + h / 2; x += h)
+	{
+		sum = fun(x, eps, k);
+		cout << setw(8) << x << setw(15) << sum << setw(10) << k << endl;
+	}
+	cout << endl;
+}
+
+void table_s(double a, double b, double h, double eps, ufs sfun, ufy fun)
+{
+	
+	int k = 1;
+	double sum, y_x;
+	for (double x = a; x < b + h / 2; x += h)
+	{
+		y_x = fun(x, eps, k);
+		sum = sfun(x, eps, k, y_x);
+		cout << setw(8) << x << setw(15) << sum << setw(10) << k << endl;
+	}
+}
+
+
+double y(double x, double eps, int& k)
+{
+	double y_x;
+	y_x = (pi * pow(x, 3) / 2);
+	return y_x;
+}
+double s(double x, double eps, int& k, double y_x)
+{
+	double sum = 0, temp;
+	k = 1;
+	/*for (int k = 1; fabs(sum - y_x) > eps; k++) {
+		temp = ((pow((-1), (k + 1)) / k) + ((pow((-1), k) * 6) / (pow(k, 3) * pi * pi))) * sin(k * pi * x);
+		sum += temp;
+	}*/
+	do
+	{
+		temp = ((pow((-1), (k + 1)) / k) + ((pow((-1), k) * 6) / (pow(k, 3) * pi * pi))) * sin(k * pi * x);
+		sum += temp; 
+		k++;
+	} while (fabs(sum - y_x) > eps);
+	return sum;
+}
