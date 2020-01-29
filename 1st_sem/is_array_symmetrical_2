@@ -1,0 +1,67 @@
+#include <iostream>
+#include <stdio.h>
+#include <iomanip>
+
+using namespace std;
+
+int main()
+{
+	int n;
+	bool result = true;
+	cout << "Enter amount of a size of square: ";
+	cin >> n;
+
+	int** arr = new int* [n]; // Обьявление указателя и выделение памяти на массив указателей
+	for (int i = 0; i < n; i++)
+	{
+		arr[i] = new int[n];// Обьявление и создание массивов
+	}
+	cout << "Enter array: " << n << "x" << n << endl;
+	// ввод массива
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+	// замена всех элементов диагонали на 0
+				for (int i = 0; i < n; i++) {
+					for (int j = 0; j < n; j++) {
+						arr[i][n - (i + 1)] = 0;
+					}
+				}
+	// определение симметричности массива
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+			//for (int j = (cols-1); j>=0; j--)
+		{
+			if (arr[i][j] != arr[n - j - 1][n - i - 1]) result = false;
+		}
+
+	}
+	// вывод результата
+	if (result == true) cout << "Symmetrical";
+	else cout << "Dissymetrical";
+
+	// очистка памяти
+	for (int i = 0; i < n; i++)
+	{
+		delete[] arr[i];
+	}
+	delete[] arr;
+	arr = NULL;
+
+
+	return 0;
+}
+/*else if (arr[rows - i - 1][j] == arr[i][cols - j - 1]) continue;
+			else result = true; break;*/
+
+			// замена всех элементов диагонали на 0
+				/*for (int i = 0; i < cols; i++) {
+					for (int j = 0; j < cols; j++) {
+						arr[i][cols - (i + 1)] = 0;
+					}
+				}*/
