@@ -1,0 +1,247 @@
+#include <iostream>
+
+using namespace std;
+
+/*int main() {
+	char st[100], temp[100];
+	gets_s(st);
+	temp[0] = '\0';
+	int wrd = 0, t = 0, i = 0;
+	int third_pos, prelast_pos;
+	while (st[i] != '\0') {
+		prelast_pos = i;
+		wrd++;
+		while (st[i] == ' ') i++;
+		if (wrd == 3) {
+			third_pos = i;
+		}
+
+		while (st[i] != ' ' && st[i] != '\0') temp[t++] = st[i++];
+
+		temp[t] = '\0';
+
+		if(strlen(temp) > 0)
+		for (int j = 0; j < strlen(temp); j++) {
+			if (temp[j] == 'w') {
+				puts(temp);
+				break;
+			}
+		}
+
+		temp[0] = '\0'; t = 0;
+	}
+	for (int i = prelast_pos - 1; st[i] != ' ' && i >= 0; i--) {
+		temp[t++] = st[i];
+	}
+	temp[t] = '\0';
+	if (strlen(temp) == 3) {
+		cout << _strrev(temp);
+	}
+	else {
+		for (int i = third_pos; st[i] != ' ' && st[i] != '\0'; i++) {
+			cout << st[i];
+		}
+	}
+	return 0;
+}*/
+/*int main() {
+	char st[100], temp[100], stcomp[] = "www";
+	gets_s(st);
+	int i = 0, t = 0, s;
+	while (st[i] != '\0') {
+		while (st[i] == ' ') i++;
+		while (st[i] != ' ' && st[i] != '\0') temp[t++] = st[i++];
+		temp[t] = '\0';
+		if (strstr(temp, stcomp) != NULL) {
+			puts(temp);
+		}
+		
+		if (strlen(temp) > 2) {
+			if (temp[0] == temp[strlen(temp) - 1]) {
+				if (temp[1] != temp[2]) {
+					puts(temp);
+				}
+			}
+		}
+		temp[0] = '\0'; t = 0;
+	}
+	return 0;
+ }*/
+/*int main() {
+	char st[100], temp[100], chq = 'q', chw = 'w';
+	gets_s(st);
+	int i = 0, t = 0, wrd = 0, three_symbols = 0, notqbutw = 0;
+	while (st[i] != '\0') {
+		wrd++;
+		while (st[i] == ' ') i++;
+		while (st[i] != '\0' && st[i] != ' ') temp[t++] = st[i++];
+		temp[t] = '\0';
+		if (strlen(temp) > 0) {
+			puts(temp);
+			if (strlen(temp) == 3) three_symbols++;
+			if (strchr(temp, chw) != NULL && strchr(temp, chq) == NULL) notqbutw++;
+			
+		}
+		temp[0] = '\0', t = 0;
+	}
+	cout << "NOTQBUTW WORDS " << notqbutw << endl;
+	cout << "Three symbols words " << three_symbols << endl;
+	return 0;
+}*/
+/*int main() {
+	char st[100], temp[100], chq = 'q', chw = 'w';
+	gets_s(st);
+	int i = 0, t = 0, wrd = 0,s = 0;
+	while (st[i] != '\0') {
+		wrd++;
+		while (st[i] == ' ') i++;
+		while (st[i] != '\0' && st[i] != ' ') temp[t++] = st[i++];
+		temp[t] = '\0';
+		s = strlen(temp);
+		//cout << s << endl;
+		if(strlen(temp) > 1)
+		if (temp[s - 1] == 'y' && temp[s - 2] == 'b') {
+			puts(temp);
+			cout << wrd << endl;
+		}
+		temp[0] = '\0', t = 0;
+	}
+	
+	return 0;
+}*/
+/*int main() {
+	char st[100], temp[100];
+	gets_s(st);
+	int i = 0, t = 0;
+	while (st[i] != '\0') {
+		while (st[i] != ' ' && st[i] != '\0') temp[t++] = st[i++];
+		temp[t] = '\0';
+		while (st[i] == ' ' && st[i] != '\0') i++;
+		if (temp[0] == 's') {
+			puts(temp);
+		}
+		t = 0; temp[0] = '\0';
+	}
+	return 0;
+}*/
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#pragma warning (disable:4996)
+using namespace std;
+
+/*int main()
+{
+	char s[100]; char* st = NULL;
+	gets_s(s);
+	int n = strlen(s);
+	s[n] = '\0';
+	char* wrd = NULL;
+	char* sl = strdup(s);
+	int kol = 0;
+	wrd = strtok(s, " ");
+	while (wrd != NULL)
+	{
+		kol++;
+		if (strchr(wrd, 'w') != NULL) { puts(wrd); cout << endl; }
+
+		if (kol == 3)st = wrd;
+		wrd = strtok(NULL, " ");
+	}
+	kol--;
+	int k = 0;
+	wrd = NULL;
+	wrd = strtok(sl, " ");
+	while (wrd != NULL)
+	{
+		k++;
+		if (kol == k)
+			if (strlen(wrd) == 3) puts(wrd);
+			else puts(st);
+		wrd = strtok(NULL, " ");
+	}
+
+	free(sl);
+
+}*/
+/*int main() {
+	char st[100];
+	gets_s(st);
+	char* pst = NULL, *prelast = NULL, *pthird_pos = NULL, *ptemp = NULL;			
+	char *stcopy = strdup(st);
+
+	pst = strtok(st, " ");
+	int wrd = 0;
+	while (pst != NULL) {
+
+		wrd++;
+		if (strchr(pst, 'w')) {
+			puts(pst);
+		}
+		if (wrd == 3) {
+			third_pos = pst;
+		}
+		prelast = temp;
+		temp = pst;
+			pst = strtok(NULL, " ");
+	}
+	if (strlen(prelast) == 3) {
+		puts(third_pos);
+	}
+	else {
+		puts(prelast);
+	}
+	free(stcopy);
+}*/
+
+/*#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <iostream>
+#include <string.h>
+using namespace std;
+int main() {
+	int k = 0, t = 0 ;
+
+	char st[100], st2[100];
+	gets_s(st);
+	char st1[] = " ";
+	char* ch, * sh, * ck, * j;
+	j = ch = ck = sh = strtok(st, st1);
+	while (ch != NULL)
+	{
+		t++;
+		if (char* s = strchr(ch, 'w'))
+			puts(ch);
+		if (t == 3) sh = ch;
+		ck = j;
+		j = ch;
+		ch = strtok(NULL, st1);
+
+	}
+
+	if (strlen(ck) == 3)
+	{
+		puts(ck);
+	}
+	else puts(sh);
+
+
+	return(0);
+}*/
+int main() {
+	char st[100];
+	gets_s(st);
+	char* pst = NULL;
+	pst = strtok(st, " ");
+	int notqbutw = 0, three_symbols = 0;
+	while (pst != NULL) {
+		puts(pst);
+		if (strlen(pst) == 3) three_symbols++;
+		if (strchr(pst, 'q') == NULL && strchr(pst, 'w') != NULL) notqbutw++;
+		pst = strtok(NULL, " ");
+	}
+	cout << notqbutw << endl;
+	cout << three_symbols << endl;
+	return 0;
+}
