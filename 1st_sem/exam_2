@@ -1,0 +1,92 @@
+#include <iostream>
+#include<string.h>
+#include<iomanip>
+using namespace std;
+/*struct list {
+	int number;
+	int free_place;
+	char time[10];
+	char place[20];
+} trains[10];
+int main() {
+	int n;
+	cout << "Enter amount of trains" << endl;
+	cin >> n;
+	cout << "Fullfill the data" << endl << endl;
+	for (int i = 0; i < n; i++) {
+		cout << "Enter number of train: ";
+		cin >> trains[i].number;
+		cin.get();
+		cout << "Enter amount of free places: ";
+		cin >> trains[i].free_place;
+		cin.get();
+		puts("Enter time in format hrs:min");
+		gets_s(trains[i].time);
+		puts("Enter destination");
+		gets_s(trains[i].place);
+		cout << endl;
+	}
+	char requested_time[10], requested_place[10];
+	puts("Enter the desired time:");
+	gets_s(requested_time);
+	puts("Enter the desired destination:");
+	gets_s(requested_place);
+	puts("Numbers of free trains are \n");
+	for (int i = 0; i < n; i++) {
+		if (strcmp(trains[i].time, requested_time) == 0 && strcmp(trains[i].place, requested_place) == 0 && trains[i].free_place != 0) {
+			cout << trains[i].number << endl;
+		}
+	}
+
+	return 0;
+}*/
+struct list {
+	char fio[50];
+	int age;
+	int marks[4];
+} student[10];
+int main() {
+	int n;
+	cout << "Enter amount of students" << endl;
+	cin >> n;
+	cout << "Fullfill the data" << endl << endl;
+	cin.get();
+	for (int i = 0; i < n; i++) {
+		puts("Enter the full name");
+		gets_s(student[i].fio);
+		cout << "Enter age: ";
+		cin >> student[i].age;
+		cin.get();
+		cout << "Enter 4 marks:";
+		for (int j = 0; j < 4; j++) {
+			cin >> student[i].marks[j];
+		}
+		cout << endl;
+		cin.get();
+
+	}
+		cout << "student under 18: ";
+		for (int i = 0; i < n; i++) {
+			if (student[i].age >= 18) {
+				puts(student[i].fio);
+			}
+		}
+		cout << "Bad marks students: ";
+		int bad_marks = 0;
+		for (int i = 0; i < n; i++) {
+			if (student[i].age >= 18) {
+				for (int j = 0; j < n; j++) {
+					if (student[i].marks[j] <= 2) {
+						bad_marks++;
+					}
+				}
+				if(bad_marks > 2) {
+					puts(student[i].fio);
+				}
+				bad_marks = 0;
+			}
+		}
+
+		
+	
+}
