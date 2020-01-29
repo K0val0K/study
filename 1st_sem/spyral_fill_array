@@ -1,0 +1,60 @@
+#include<iostream>
+#include<iomanip>
+using namespace std;
+int main() {
+	int n, m, max, num = 1, arr[100][100];
+	char direction = 'r';
+	cin >> n >> m;
+	//fulfill by zero's to indicate turn 
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			arr[i][j] = 0;
+		}
+	}
+	// trying to algorithm))
+	int i = 0, j = 0;
+	max = n * m;
+	while (num <= max) {
+		if (direction == 'r') {
+			for (; (j < m || arr[i][j + 1] == 0); j++) {
+				arr[i][j] = num++;
+			}
+			direction = 'd';
+		}
+
+		if (direction == 'd') {
+			for (; (i < n || arr[i + 1][j] == 0); i++) {
+				arr[i][j] = num++;
+			}
+			direction = 'l';
+		}
+		if (direction == 'l') {
+			for (; (j > -1 || arr[i][j - 1] == 0); j--) {
+				arr[i][j] = num++;
+			}
+			direction = 'u';
+		}
+
+		if (direction == 'u') {
+			for (; (i > -1 || arr[i - 1][j] == 0); i--) {
+				arr[i][j] = num++;
+			}
+			direction = 'r';
+		}
+
+	}
+
+
+	//output
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cout << setw(4) << arr[i][j];
+		}
+		cout << endl;
+	}
+
+
+
+
+	return 0;
+}
