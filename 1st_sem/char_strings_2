@@ -1,0 +1,57 @@
+
+#include <iostream>
+#include <string.h>
+#include <stdlib.h>
+using namespace std;
+int main()
+{
+		char st[80]; 
+		gets_s(st);
+		
+		char temp[80] = "";
+		int k = 0;
+		char* temp2;
+		double number;
+		int minus_counter = 0;
+		for (int i = 0; i < 80; i++) {
+			if ((st[i] == 'e' || st[i] == '.') && i != 0 && i != (strlen(st) - 1) && isdigit(st[i - 1]) && (isdigit(st[i + 1]) || st[i + 1] == '-')) {
+				
+				for (int j = i - 1; (isdigit(st[j])) || (st[j] = '-'); j--) {
+					if (st[j] == '-') {
+						minus_counter++;
+						if (minus_counter == 2) {
+							break;
+						}
+					}
+					temp[k++] = st[j];
+					if (j == 0) break;
+				}
+				minus_counter = 0;
+				
+					_strrev(temp);
+					if (st[i] == '.') {
+						temp[k++] = '.';
+					}
+					else {
+						temp[k++] = 'e';
+					}
+				for (int h = i + 1; isdigit(st[h]) || (st[h] = '-'); h++) {
+					if (st[h] == '-') {
+						minus_counter++;
+						if (minus_counter == 2) {
+							break;
+						}
+					}
+					temp[k++] = st[h];
+				}
+				minus_counter = 0;
+				k = 0;
+				puts(temp);
+			
+				for (int i = 0; i < sizeof(temp); i++) {
+					temp[i] = '\0';
+				}
+				
+			}
+		}
+}
