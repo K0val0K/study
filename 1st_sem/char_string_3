@@ -1,0 +1,13 @@
+int main() {
+    char st[50];
+    gets_s(st);
+    char* wrd = NULL;
+    char st1[] = " ";
+    char* context = NULL;
+    wrd = strtok_s(st, st1, &context);
+    while (wrd != NULL) {
+        puts(wrd);
+        wrd = strtok_s(NULL, st1, &context);
+        
+    }
+}
