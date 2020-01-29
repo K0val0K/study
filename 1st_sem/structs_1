@@ -1,0 +1,98 @@
+#include<iostream>
+#include<string>
+#include<stdio.h>
+#include<clocale>
+#include<ctype.h>
+#include<iomanip>
+
+using namespace std;
+struct employees_list {
+	char name[128];
+	int department_number;
+	char position[128];
+	int day;
+	int month;
+	int year;
+} *list;
+
+int main() {
+	setlocale(LC_ALL, "");
+	int amount;
+	cout << "Enter amount of employees: ";
+	cin >> amount;
+	list = new employees_list[amount];
+	cin.get(); // чистит буфер 
+
+	cout << "-----------------------------------------------------------" << endl;
+
+	for (int i = 0; i < amount; i++) {
+		cout << "Enter FULL name: " << endl;
+		gets_s(list[i].name);
+		
+		cout << "Enter department number: " << endl;
+		cin >> list[i].department_number;
+		cin.get();
+		cout << "Enter employee position: " << endl;
+		gets_s(list[i].position);
+		cout << "Enter a day number of entry: " << endl;
+		cin >> list[i].day;
+		cin.get();
+		cout << "Enter a month number of entry: " << endl;
+		cin >> list[i].month;
+		cin.get();
+		cout << "Enter a year of entry: " << endl;
+		cin >> list[i].year;
+		cin.get();
+		cout << endl;
+	}
+	cout.width(30);
+
+	cout << "---------------------------------------------------------------- \n Your structure is: \n" << endl;
+	cout << left << setw(20) << "Full Name" << " " << setw(20) << "Department number" <<" " << setw(20) << "Position" <<" "<< setw(20) << "Date of entry" << endl;
+
+	for (int i = 0; i < amount; i++) {
+		cout << setw(20) << list[i].name << " " << setw(20) << list[i].department_number << " " << setw(20) << list[i].position << " " << setw(2) << list[i].day << "/" << setw (2) << list[i].month << "/" << setw(4) << list[i].year << endl;
+	}// вывод структуры
+
+	cout << "----------------------------------------------------------------" << endl;
+
+	int date[100];
+	int temp_arr;
+
+	for (int i = 0; i < amount; i++) {
+		temp_arr = list[i].year * 367 + list[i].month * 32 + list[i].day;
+		date[i] = temp_arr;
+	}
+	// сортировка структуры по дате
+	employees_list temp_list;
+	for (int i = 0; i < (amount - 1); i++) {
+		for (int j = (i + 1); j < amount; j++)
+			if (date[i] > date[j]) {
+
+				temp_arr = date[i];
+				date[i] = date[j];
+				date[j] = temp_arr;
+
+				temp_list = list[i];
+				list[i] = list[j];
+				list[j] = temp_list;
+		}
+	} 
+
+	int department_number;
+	cout << "Enter a department number: ";
+	cin >> department_number;
+	cout << "Your department employees list sorted by date: \n\n";
+	
+	// вывод сотрудника отдела, сортированных по убыванию стажа
+	for (int i = 0; i < amount; i++) {
+		if (department_number == list[i].department_number) {
+			cout << setw(20) << list[i].name << " " << setw(20) << list[i].department_number << " " << setw(20) << list[i].position << " " << setw(2) << list[i].day << "/" << setw(2) << list[i].month << "/" << setw(4) << list[i].year << endl;
+
+			
+		}
+	} 
+	delete[]list;
+
+	return 0;
+}
