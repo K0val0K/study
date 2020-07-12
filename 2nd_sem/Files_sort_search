@@ -1,0 +1,546 @@
+#include <iostream>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+#include<iomanip>
+#include <io.h>
+#include<stack>
+
+FILE* fl;
+char fileName[31] = "!File hasn't choosen yet!";
+//int amount_of_flights;
+
+using namespace std;
+
+
+
+struct departureInfo {
+	char flight_number[10];
+	char destination[10];
+	char departure_time[6];
+	void add() {
+		cout << "Enter flight number: ";
+		cin >> flight_number;
+		cout << "Enter destination: ";
+		cin >> destination;
+		cout << "Enter departure time: ";
+		bool isIncorrect = true;
+		while (isIncorrect) {
+			cin >> departure_time;
+			if (departure_time[2] != ':') {
+				isIncorrect = true;
+				cout << "Enter again!!!(Form hh:mm)" << endl;
+				cout << "Enter departure time: ";
+			}
+			else isIncorrect = false;
+		}
+
+	}
+};
+int menu();
+void chooseFileName();
+void createInfoFile();
+void readInfoFile();
+void createInfoList();
+void searchFlightToTown();
+void outputResultIntoText(int, char*, departureInfo*);
+
+void sort(int type);
+void recQuickSort(int*, int, departureInfo*);
+void QuickSort(int*, int, departureInfo*);
+void BubbleSort(int*, int, departureInfo*);
+void SelectionSort(int*, int, departureInfo*);
+void InsertionSort(int*, int, departureInfo*);
+void TopDownMergeSort(int*, int, int, departureInfo*);
+void ShellSort(int*, int, departureInfo*);
+
+void search();
+int BinarySearch(int*, int, int, departureInfo*);
+int LinearSearch(int*,int, int);
+int InterpolationSearch(int*, int, int, departureInfo*);
+
+int main() {
+	while (true) {
+		switch (menu())
+		{
+		case 1: chooseFileName(); break;
+		case 2: createInfoFile(); break;
+		case 3: createInfoList(); break;
+		case 4: readInfoFile(); break;
+		case 5: searchFlightToTown(); break;
+		case 6: sort(1); break; //quick sort(recursive)
+		case 7: sort(2); break; // quick sort(non-recursive)
+		case 8: sort(3); break; // selection sort
+		case 9: sort(4); break; //insertion sort
+		case 10: sort(5); break; // Shell sort
+		case 11: sort(6); break; // merge sort
+		case 12: sort(7); break; // buble sort
+		case 13: search(); break;
+		case 14: return 0;
+		default: cout << "Choose right!" << endl;
+		}
+		puts("\nPress any key to continue");
+		_getch(); system("cls");
+	}
+}
+
+
+int menu() {
+	int num;
+	cout << "Choose option" << endl;
+	cout << "1 - Choose processed file name" << endl;
+	cout << "2 - Create new file" << endl;
+	cout << "3 - Create departure list and safe into " << fileName << " file" << endl;
+	cout << "4 - Read flights info from " << fileName << " and put into screen" << endl;
+	cout << "5 - Find flights into chosen city and put result into screen" << endl;
+	cout << "6 - Sort flights list by time (Recursive Quick sort)" << endl;
+	cout << "7 - Sort flight list by time (Non-recursive Quick sort)" << endl;
+    cout << "8 - Sort flights list by time (Selection sort)" << endl;
+	cout << "9 - Sort flight list by time (Insertion sort)" << endl;
+	cout << "10 - Sort flights list by time (Shell sort)" << endl;
+	cout << "11 - Sort flight list by time (Merge sort)" << endl;
+	cout << "12 - Sort flight by time(Bubble sort)" << endl;
+	cout << "13 - Find plane that departure at ..." << endl;
+	cout << "14 - Exit" << endl;
+	cin >> num;
+	return num;
+}
+void chooseFileName() {
+	cout << "Enter File Name: ";
+	cin >> fileName;
+	if (fopen_s(&fl, fileName, "rb") != NULL) {
+		cout << "This file doesn't exist";
+		strcpy_s(fileName,"!File name hasn't choosen yet!");
+	}
+	_fcloseall();
+
+}
+
+void createInfoFile() {
+	
+	cout << "Enter file name: ";
+	cin >> fileName;
+	char is_continue = 'y';
+	if (fopen_s(&fl, fileName, "rb") == NULL) {
+		cout << "This file is already exist\nStill create a new file?\n(All information will be lost)\n(y/n)" << endl;
+		cin >> is_continue;
+		fclose(fl);
+	}
+	if (is_continue == 'y') {
+		cout << "Creating file..." << endl;
+		if (fopen_s(&fl, fileName, "wb") != NULL) {
+			cout << "Creating file error";
+			exit(EXIT_FAILURE);
+		}
+		cout << "File succesfully created" << endl;
+		fclose(fl);
+	}
+}
+
+void createInfoList() {
+	if (fopen_s(&fl, fileName, "wb+") != NULL) {
+		cout << fileName << "Opening error";
+		exit(EXIT_FAILURE);
+	}
+	departureInfo temp;
+	char is_continue;
+	do {
+		temp.add();
+		fwrite(&temp, sizeof(temp), 1, fl);
+		cout << endl << "Enter another flight? (y/n)";
+		cin >> is_continue;
+	} while (is_continue != 'n');
+	fclose(fl);
+}
+
+void readInfoFile() {
+	if (fopen_s(&fl, fileName, "rb+") != NULL) {
+		cout << fileName << "Opening error";
+		exit(EXIT_FAILURE);
+	}
+	int n = _filelength(_fileno(fl)) / sizeof(departureInfo);
+	departureInfo *temp = new departureInfo[n];
+	fread(temp, sizeof(departureInfo), n, fl);
+	cout << endl << "All flights for tommorow:" << endl;
+	for (int i = 0; i < n; i++) {
+		cout << i + 1 << "." << endl;
+		cout << "Flight number: " << temp[i].flight_number << endl;
+		cout << "Destination: " <<  temp[i].destination << endl;
+		cout << "Departure time: "<< temp[i].departure_time << endl;
+	}
+	cout << endl;
+	delete[]temp;
+	fclose(fl);
+}
+
+void searchFlightToTown () {
+	if (fopen_s(&fl, fileName, "rt+") != NULL) {
+		cout << fileName << "Opening error";
+		exit(EXIT_FAILURE);
+	}
+	int n = _filelength(_fileno(fl)) / sizeof(departureInfo);
+	departureInfo* temp = new departureInfo[n];
+	fread(temp, sizeof(departureInfo), n, fl);
+	char town[10];
+	cout << "Enter town: ";
+	cin >> town;
+	int counter = 1;
+
+	for (int i = 0; i < n; i++) {
+		if (!_stricmp(temp[i].destination,town)) {
+			cout << counter << "." << endl;
+			cout << "Flight number: " << temp[i].flight_number << endl;
+			cout << "Departure_time: " << temp[i].departure_time << endl;
+			counter++;
+		}
+	}
+
+	if (counter == 1) {
+		cout << "There is no available flight to this town for tommorow";
+	}
+
+	char save;
+	cout << endl << "Save this information into file? (y/n)";
+	cin >> save;
+	if (save == 'y') {
+		outputResultIntoText(n, town, temp);
+	}
+	else {
+		delete[]temp;
+		fclose(fl);
+	}
+}
+
+void outputResultIntoText(int n, char *town, departureInfo *temp) {
+	FILE* fl_out;
+	if (fopen_s(&fl_out, "output.txt", "wt") != NULL) {
+		cout << "Creating output file error";
+		exit(EXIT_FAILURE);
+	}
+	for (int i = 0; i < n; i++) {
+		if (!_stricmp(temp[i].destination, town)) {
+			fprintf(fl_out, "Planes info:\nDestination: %s, Flight number:  %s, Departure Time %s", town, (temp + i)->flight_number, (temp + i)->departure_time);
+		}
+	}
+	cout << "Information about flights to " << town << " was succesfully written to output.txt file";
+	delete[]temp;
+	fclose(fl);
+	fclose(fl_out);
+
+}
+void sort(int type) {
+	if (fopen_s(&fl, fileName, "rb+") != NULL) {
+		cout << fileName << "Sorting file opening error";
+		exit(EXIT_FAILURE);
+	}
+	int n = _filelength(_fileno(fl)) / sizeof(departureInfo);
+	departureInfo* list = new departureInfo[n];
+	fread(list, sizeof(departureInfo), n, fl);
+	int* arr = new int[n];
+	char min[3], hour[3];
+	int time;
+	for (int i = 0; i < n; i++) { // создаем дополнительный массив, по которому будем сортировать
+		strncpy_s(hour, &(list[i].departure_time[0]), 2);
+		strncpy_s(min, &(list[i].departure_time[3]), 2);
+		min[2] = hour[2] = '\0';
+		time = atoi(hour) * 60 + atoi(min);
+		arr[i] = time;
+	}
+	
+	switch (type) {
+	case 1: recQuickSort(arr, n, list); break;
+	case 2: QuickSort(arr, n, list); break;
+	case 3: SelectionSort(arr, n, list); break;
+	case 4: InsertionSort(arr, n, list); break;
+	case 5: ShellSort(arr, n, list); break;
+	case 6: TopDownMergeSort(arr,0,n - 1,list); break;
+	case 7: BubbleSort(arr, n, list); break;
+
+	default: cout << "UNKNOWN ERROR!";
+	}
+	for (int i = 0; i < n; i++) {
+		cout << i + 1 << "." << endl;
+		cout << "Flight number: " << list[i].flight_number << endl;
+		cout << "Destination: " << list[i].destination << endl;
+		cout << "Departure time: " << list[i].departure_time << endl;
+
+	}
+	fclose(fl);
+   }
+
+void BubbleSort(int *arr, int n, departureInfo* list) {
+	for (int i = 0; i < n - 1; i++)
+		for (int j = i + 1; j < n; j++) {
+			if (arr[j] < arr[i]) {
+				swap(arr[i], arr[j]);
+				swap(list[i], list[j]);
+			}
+		}
+ }
+
+void recQuickSort(int* arr, int n, departureInfo* list) {
+	int left = 0;
+	int right = n - 1;
+	int pivot = arr[n / 2];
+	do {
+		while (arr[left] < pivot) {
+			left++;
+		}
+		while (arr[right] > pivot) {
+			right--;
+		}
+		if (left <= right) {
+			swap(arr[left], arr[right]);
+			swap(list[left], list[right]);
+			left++;
+			right--;
+		}
+	} while (left <= right);
+		if (right > 0) {
+			recQuickSort(arr, right + 1, list);
+		}
+		if (left < n) {
+			recQuickSort(&arr[left], n - left, &list[left]);
+		}
+}
+
+void QuickSort(int* arr, int n, departureInfo* list) {
+	if (n == 1) {
+		return;
+	}
+	int pivot, first, last, left, right;
+	pivot = first = last = left = right = 0;
+	stack<int>bourders;
+	bourders.push(n - 1);
+	bourders.push(0);
+	do { // while (bourders.empty() != NULL)
+		first = bourders.top(); bourders.pop();
+		last = bourders.top(); bourders.pop();
+		if (((last - first) == 1) && (arr[first] > arr[last])) {
+			swap(arr[last], arr[first]);
+			swap(list[last], list[first]);
+		}
+		else {
+			pivot = arr[(first + last) / 2];
+			left = first;
+			right = last;
+			do {    //while (left <= right)
+				while (arr[left] < pivot) left++;
+				while (arr[right] > pivot) right--;
+				if (left <= right) {
+					swap(arr[left], arr[right]);
+					swap(list[left], list[right]);
+					left++; right--;
+
+				}
+			} while (left <= right);
+		}
+
+			if (right > first) {
+				bourders.push(right);
+				bourders.push(first);
+			}
+			if (left < last) {
+				bourders.push(last);
+				bourders.push(left);
+			}
+
+
+		
+
+	} while (!bourders.empty());
+}
+
+
+void Merge(int* arr, int left, int mid, int right, departureInfo* list) {
+	
+	int i, j, k;
+	int n1 = mid - left + 1;
+	int n2 = right - mid;
+	int* leftA = new int[n1];
+	int* rightA = new int[n2];
+	departureInfo* leftL = new departureInfo[n1];
+	departureInfo* rightL = new departureInfo[n2];
+	for (i = 0; i < n1; i++) {
+		leftA[i] = arr[left + i];
+		leftL[i] = list[left + i];
+	}
+	for (j = 0; j < n2 && j < right; j++) {
+		rightA[j] = arr[mid + 1 + j];
+		rightL[j] = list[mid + 1 + j];
+	}
+	i = j = 0;
+	k = left;
+	while (i < n1 && j < n2) {
+		if (leftA[i] <= rightA[j]) {
+			arr[k] = leftA[i];
+			list[k] = leftL[i];
+			i++;
+		}
+		else {
+			arr[k] = rightA[j];
+			list[k] = rightL[j];
+			j++;
+		}
+		k++;
+	}
+	while (i < n1) {
+		arr[k] = leftA[i];
+		list[k] = leftL[i];
+		i++;
+		k++;
+	} 
+	while (j < n2) {
+		arr[k] = rightA[j];
+		list[k] = rightL[j];
+		j++;
+		k++;
+	}
+	delete[]leftA;
+	delete[]leftL;
+	delete[]rightA;
+	delete[]rightL;
+
+}
+void TopDownMergeSort(int* arr, int left, int right, departureInfo* list) { //right = end of array, left = begin of array
+	if (left < right) {
+		int mid = left + (right - left) / 2;
+		TopDownMergeSort(arr, left, mid, list);
+		TopDownMergeSort(arr, mid+1, right, list);
+		Merge(arr, left, mid, right, list);
+	}
+	
+
+}
+
+void SelectionSort(int*arr, int n, departureInfo* list) {
+	int min;
+	for (int i = 0; i < n; i++) {
+		min = i;
+		for (int j = i + 1; j < n; j++) {
+			if (arr[j] < arr[min]) {
+				min = j;
+			}
+		}
+		swap(arr[i], arr[min]);
+		swap(list[i], list[min]);
+	}
+}
+void InsertionSort(int*arr, int n, departureInfo* list) {
+	for (int i = 1; i < n; i++)
+		for (int j = i; j > 0 && arr[j - 1] > arr[j]; j--) {
+			swap(arr[j - 1], arr[j]);
+			swap(list[j - 1], list[j]);
+		}
+}
+
+void ShellSort(int* arr, int n, departureInfo* list) {
+	int i, j;
+	for (int d = n / 2; d > 0; d/=2) 
+		for (int i = d; i < n; i++) 
+			for (j = i - d; j >= 0 && arr[j] > arr[j + d]; j -= d) {
+				swap(arr[j], arr[j + d]);
+				swap(list[j], list[j + d]);
+			}
+	
+}
+void search() {
+	if (fopen_s(&fl, fileName, "rb+") != NULL) {
+		cout << fileName << "Search file opening error";
+		exit(EXIT_FAILURE);
+	}
+	int n = _filelength(_fileno(fl)) / sizeof(departureInfo);
+	departureInfo* list = new departureInfo[n];
+	fread(list, sizeof(departureInfo), n, fl);
+	int* arr = new int[n];
+	char min[3], hour[3];
+	int time;
+	for (int i = 0; i < n; i++) { // создаем дополнительный массив, по которому будем сортиоровать
+		strncpy_s(hour, &(list[i].departure_time[0]), 2);
+		strncpy_s(min, &(list[i].departure_time[3]), 2);
+		min[2] = hour[2] = '\0';
+		time = atoi(hour) * 60 + atoi(min);
+		arr[i] = time;
+	}
+
+	cout << "Choose method: \n1.Binary\n2.Interpolation\n3.Linear" << endl;
+	int method, position, key;
+	cin >> method;
+	char temp[6];
+
+	cout << "Enter required time(FORMAT HH:MM): ";
+	cin >> temp;
+	strncpy_s(hour, &temp[0], 2);
+	strncpy_s(min, &temp[3], 2);
+	min[2] = hour[2] = '\0';
+	key = atoi(hour) * 60 + atoi(min);
+
+	switch (method) {
+	case 1: if ((position = BinarySearch(arr, n, key, list)) != -1) {
+		cout << "Flight number: " << list[position].flight_number << endl;
+		cout << "Destination: " << list[position].destination << endl;
+		cout << "Departure time: " << list[position].departure_time << endl;
+	}
+		  else { cout << "Flight wasn't found" << endl; };
+		  break;
+	case 2: if ((position = InterpolationSearch(arr, n, key, list)) != -1) {
+		cout << "Flight number: " << list[position].flight_number << endl;
+		cout << "Destination: " << list[position].destination << endl;
+		cout << "Departure time: " << list[position].departure_time << endl;
+	}
+		  else { cout << "Flight wasn't found" << endl; };
+		  break;
+	case 3: if ((position = LinearSearch(arr, n, key)) != -1) {
+		cout << "Flight number: " << list[position].flight_number << endl;
+		cout << "Destination: " << list[position].destination << endl;
+		cout << "Departure time: " << list[position].departure_time << endl;
+	}
+		  else { cout << "Flight wasn't found" << endl; };
+		  break;
+
+	}
+	fclose(fl);
+}
+
+int BinarySearch(int* arr, int n, int key, departureInfo*list) {
+	QuickSort(arr, n, list);
+	if (n == 0) return -1;
+	int high = n, low = 0, mid;
+		while (low <= high) {
+			mid = (high + low) / 2;
+			if (arr[mid] == key) return mid;
+			else if (arr[mid] > key) high = mid - 1;
+			else low = mid + 1;
+	}
+		return -1; // if element was't found
+}
+
+int LinearSearch(int* arr, int n, int key) {
+	for (int i = 0; i < n; i++) {
+		if (arr[i] == key) return i;
+	}
+	return -1;
+}
+
+int InterpolationSearch(int* arr, int n, int key, departureInfo*list) {
+	QuickSort(arr, n, list);
+	int mid;
+	int left = 0;
+	int right = n - 1;
+	while (arr[left] < key && key < arr[right]) {
+		mid = left + (key - arr[left]) * (right - left) / (arr[right] - arr[left]);
+		if (arr[mid] < key) left = mid + 1;
+		else if (arr[mid] > key) right = mid - 1;
+		else return mid;
+	}
+
+	if (arr[left] == key) return left;
+	else if (arr[right] == key) return right;
+	else return -1;
+}
+
+/*в качестве вспомогательного массива моэно также попробовать 2-мерный в котором хранятся значения,
+соответсвущие сортируемым данным а во второй строке изначальные индексы этих данных*/
+
+
