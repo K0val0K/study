@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <map>
+#include <set>
+#include <string>
+
+
+using namespace std;
+
+bool inDictionary(string word, multiset<string> &dictionary) {
+	if (dictionary.find(word) != dictionary.end()) {
+		return true;
+	}
+	else return false;
+}
+
+bool isCorrect(string word, multiset<string> &dictionary) {
+	if (dictionary.find(word) != dictionary.end()) {
+		return true;
+	}
+	else return false;
+}
+
+bool isOneUpper(string word) {
+	int counter = 0;
+	for (int i = 0; i < word.size(); i++) {
+		if (word[i] >= 'A' && word[i] <= 'Z') {
+			counter++;
+		}
+	}
+	return (counter == 1);
+}
+
+void lowTransform(string &word) {
+	for (int i = 0; i < word.size(); i++) {
+		if (word[i] >= 'A' && word[i] <= 'Z') {
+			word[i] = tolower(word[i]);
+		}
+	}
+}
+
+
+int main()
+{
+	int n;
+	cin >> n;
+	cin.get();
+	string text, word, downcase_word;
+	multiset<string> dictionary, downcase_dict;
+	for (int i = 0; i < n; i++) {
+		getline(cin, word);
+		dictionary.insert(word);
+		//transform(word.begin(), word.end(), word.begin(), tolower);
+		lowTransform(word);
+		downcase_dict.insert(word);
+		word.clear();
+	}
+	//word.clear();
+	//cin.ignore('\n');
+	getline(cin, text);
+	text += ' ';
+	if (text.size() == 1) {
+		cout << 0;
+		return 0;
+	}
+	int mistakes_counter = 0;
+	for (int i = 0, tempi = 0; text[i] != '\0'; i++) {
+		if (text[i] == ' ') {
+			word.append(text, tempi, i - tempi);
+			downcase_word = word;
+			//transform(downcase_word.begin(), downcase_word.end(), downcase_word.begin(), tolower);
+			lowTransform(downcase_word);
+			tempi = i + 1;
+			if (inDictionary(downcase_word,downcase_dict)) {
+				if (!isCorrect(word, dictionary)) {
+					mistakes_counter++;
+				}
+			}
+			else {
+				if (!isOneUpper(word)) {
+					mistakes_counter++;
+				}	
+			}
+			word.clear();
+			downcase_word.clear();
+		}
+	}
+	cout << mistakes_counter;
+
+	return 0;
+}
