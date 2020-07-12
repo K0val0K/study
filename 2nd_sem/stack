@@ -1,0 +1,135 @@
+#include <iostream>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+#include<iomanip>
+#include <io.h>
+using namespace std;
+
+struct Stack {
+    int info;
+    Stack* next;
+};
+
+Stack *Push(Stack*, int);
+void Read(Stack*);
+void *DeleteAll(Stack*);
+double FindAverage(Stack*);
+int FindLessThanAverage(Stack*, double);
+
+/*Stack* Del5(Stack* head) {
+    head = Push(head, 21);
+    Stack* p = head;
+    Stack* t = p->next;
+    while (t != NULL) {
+        if ((t->info % 10) == 5) {
+            (p->next) = (t->next);
+            delete t; 
+            t = p->next;
+        }
+        else {
+            p = t;
+            t = t->next;
+        }
+    }
+    t = head;
+    head = head->next;
+    delete t;
+    return head;
+}*/
+
+int main()
+{
+    setlocale(0, ""); srand(time(NULL));
+    cout << "Эта программа автоматически создаст стэк из чисел в диапазоне от -50 до 50 и выведет его.\nНайдет среднее значение всех элементов стека и выведет его.\nА также удалит все элементы, меньшие среднего значения" << endl;
+    cout << "Нажмите любую кнопку для начала"; _getch(); system("cls");
+    cout << "Введите размер изначального стека: ";
+    int n, num;
+    cin >> n;
+    Stack* head1 = NULL;
+    for (int i = 0; i < n; i++) {
+        num = rand() % 100 - 50;
+        head1 = Push(head1, num);
+    }
+    cout << "Полученный стек: ";
+    Read(head1); //считываем стек без удаления
+    double average = FindAverage(head1);
+    cout << endl << "Среднее значение элементов стека: " << average << endl;
+    cout << "Количество элементов меньше среднего значения: " << FindLessThanAverage(head1, average) << endl;
+
+
+    if (DeleteAll(head1) == NULL) {
+        cout << "Stack succesfully deleted";
+    }
+
+    
+
+
+}
+
+Stack* Push(Stack* head, int num) {
+    Stack* temp = new Stack;
+    temp->info = num;
+    temp->next = head;
+    return temp;
+}
+
+void Read(Stack* head) {
+    Stack* temp = head;
+    if (temp == NULL) {
+        cout << "Стек пуст!" << endl;
+        return; //прерывание работы функции типа void()
+    }
+    while (temp != NULL) {
+        cout << temp->info << " ";
+        temp = temp->next;
+    }
+}
+
+double FindAverage(Stack* head) {
+    Stack* temp = head;
+    double average = 0;
+    int n = 0;
+    if (temp == NULL) {
+        cout << "Стек пуст! ";
+        return 0;
+    }
+    while (temp != NULL) {
+        average += temp->info;
+        temp = temp->next;
+        n++;
+    }
+    return (average / n);
+}
+
+int FindLessThanAverage(Stack* head, double average) {
+    Stack* temp = head;
+    int n = 0;
+    if (temp == NULL) {
+        cout << "Стек пуст! ";
+        return 0;
+    }
+    while (temp != NULL) {
+        if (temp->info < average) n++;
+        temp = temp->next;
+    }
+    return n;
+}
+
+void *DeleteAll(Stack* phead) {
+    Stack* temp;
+    while (phead != NULL) {
+        temp = phead;
+        phead = phead->next;
+        delete temp;
+    }
+    return phead;
+}
+
+
+
+
+
+
+
