@@ -1,0 +1,9 @@
+﻿  6.cpp
+D:\study\C++\ООП лабы\6\6\6\6.cpp(184,12): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+D:\study\C++\ООП лабы\6\6\6\6.cpp(76): warning C4715: 'Stack<int>::pop': not all control paths return a value
+D:\study\C++\ООП лабы\6\6\6\6.cpp(76): warning C4715: 'Stack<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >::pop': not all control paths return a value
+  6.vcxproj -> D:\study\C++\ООП лабы\6\6\Debug\6.exe
